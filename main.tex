@@ -26,7 +26,7 @@
 \usepackage{booktabs}
 \usepackage[backend=biber,style=numeric,
             sorting=nyt]{biblatex}
-\addbibresource{ecl.bib}
+\addbibresource{references.bib}
 \usepackage{csquotes}
 \usepackage[yyyymmdd]{datetime}
 \renewcommand{\dateseparator}{-}
@@ -71,7 +71,7 @@ gomes.luiz@gmail.com
 %\begin{multicols}{2}
 %[
 \section{Project Overview}
-Bug Report Tracking Systems(BTS), such as Bugzilla or Jira, have played a major role in the maintenance process in many software development settings, both in Closed Source Software (CSS) and in Open Source Software (OSS). This fact is especially true in OSS projects -- characterized by many users and developers with different levels of expertise spread out the world -- who might create or be responsible for dealing with several bug reports. A user interacts with a BTS often through a simple mechanism called bug report form\cite{Tian:2012}. This kind of form enables users to request changes, to report bugs, or to ask for support in a software product. Initially, he or she should inform a short description, a long description, a type (e.g., bug, new feature, improvement, and task), and an associated severity level (e.g., blocker, critical, normal, major, minor, and trivial). Subsequently, a development team member will review this request and, in case it is not refused for some reason (e.g., bug report duplication), he or she will complete the information in bug report form, indicating, for example, its severity and assigning the person responsible for the bug report. \cite{Cavalcanti:2014}. In this context, my project proposes a machine learning web application for bug severity prediction based on the bug description filled by users when they open a bug in a BTS.
+Bug Report Tracking Systems(BTS), such as Bugzilla or Jira, have played a major role in the maintenance process in many software development settings, both in Closed Source Software (CSS) and in Open Source Software (OSS). This fact is especially true in OSS projects -- characterized by many users and developers with different levels of expertise spread out the world -- who might create or be responsible for dealing with several bug reports. A user interacts with a BTS often through a simple mechanism called bug report form\cite{Tian:2012}. This kind of form enables users to request changes, to report bugs, or to ask for support in a software product. Initially, he or she should inform a short description, a long description, a type (e.g., bug, new feature, improvement, and task), and an associated severity level (e.g., blocker, critical, major, minor, and trivial). Subsequently, a development team member will review this request and, in case it is not refused for some reason (e.g., bug report duplication), he or she will complete the information in bug report form, indicating, for example, its severity and assigning the person responsible for the bug report. \cite{Cavalcanti:2014}. In this context, my project proposes a machine learning web application for bug severity prediction based on the bug description filled by users when they open a bug in a BTS.
 
 \subsection{Problem Statement}
 The severity level information is recognized as a critical variable in the equation to estimate a prioritization of bugs. It defines how soon the bug report needs to be addressed. However, the severity level assignment remains mostly a manual process that relies only on the experience and expertise of the person who has opened the bug report~\cite{Yang:2017}. As a consequence, it is a process with a high degree of subjectivity, and it may be quite error-prone. The number of bug reports in large and medium software OSS projects is frequently very large. Severity level shifts throughout the bug report lifecycle may harm the planning of maintenance activities. For example, the maintenance team could be assigned to address less significant bug reports before the most important ones.
@@ -79,7 +79,7 @@ The severity level information is recognized as a critical variable in the equat
 \bigskip
 
 \section{Solution Statement}
-The general purpose of my project is to develop an intelligent ML-based web assistant to help developers and maintenance team to predict the severity level of a bug (blocker, critical, normal, major, minor, or trivial). To meet the goal, the tasks that should be executed are the following:
+The general purpose of my project is to develop an intelligent ML-based web assistant to help developers and maintenance team to predict the severity level of a bug (blocker, critical, major, minor, or trivial). To meet the goal, the tasks that should be executed are the following:
 \begin{enumerate}
     \item Collect bug reports data from a Bugzilla BTS;
     \item Pre-process the description text using text mining techniques (e.g. tokenization).
@@ -88,37 +88,50 @@ The general purpose of my project is to develop an intelligent ML-based web assi
 \end{enumerate}
 %]
 \subsection{Datasets and Inputs}
-I'll use the Mozilla project dataset, available in Mendeley Data in CSV format\footnote{Gomes, Luiz; Torres, Ricardo; Côrtes, Mario (2021), “A Dataset for Long-lived Bug Prediction in FLOSS ”, Mendeley Data, V2, doi: 10.17632/v446tfssgj.2}, to train and test the predicting model. The Mozilla project encompasses several open-source projects, such as Firefox, Thunderbird, and Bugzilla. Furthermore, it is well-established, has a considerable number of registered bug reports, uses standard repositories,
-and were being studied in academic research~\cite{Lamkanfi:2010, Lamkanfi:2011, Tian:2012}. Table~\ref{tab:features_descriptions} describes the features of the dataset that will used for bug report severity prediction. Each feature in this table has a description, a category.
+I'll use the Mozilla project dataset, available in Mendeley Data in CSV format\footnote{}, to train and test the predicting model. The Mozilla project encompasses several open-source projects, such as Firefox, Thunderbird, and Bugzilla. Furthermore, it is well-established, has a considerable number of registered bug reports, uses standard repositories, and were being studied in academic research~\cite{Lamkanfi:2010, Lamkanfi:2011, Tian:2012}. Table~\ref{tab:features_descriptions} describes the features of the dataset that will used for bug report severity prediction. Each feature in this table has a description, a category.
 
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
-    
-    \begin{tabular}{@{}p{.20\textwidth}p{.40\textwidth}p{.20\textwidth}ccccc@{}}
+    \begin{tabular}{@{}p{.20\textwidth}p{.30\textwidth}p{.15\textwidth}p{.10\textwidth}@{}}
     \toprule
-    {\bf Feature} & {\bf Description} & {\bf Category} & {\bf Target-Label}\\
+    {\bf Feature} & {\bf Description} & {\bf Category} & {\bf Target Label}\\
     \midrule
-    
-    Bug id                       & Bug report identifier.                                                                                                                               & Quantitative Discrete & No\\
+    Bug id                       & Bug report identifier.  & Quantitative Discrete & No\\
     \midrule
-    Description                  & Textual content appearing in the description field of the bug  report.                                                                               & Unstructured Text & No\\
+    Description                  & Textual content appearing in the description field of the bug report.                                                                               & Unstructured Text & No\\
     \midrule
     Severity                     & Indicates how severe the problem is – from blocker (``application unusable”) to trivial (``minor cosmetic issue”).                                & Qualitative Ordinal & Yes\\
     \bottomrule 
     \end{tabular}
-    \caption{The features and its descriptions of dataset used for bug severity prediction. The target-label is the Severity feature }\\
+    \caption{The features and its descriptions of dataset used for bug severity prediction. The target label of prediction model is the {\bf Severity} feature }\\
     \label{tab:features_descriptions}
 \end{table}
 
+\bigskip
+Figure~\ref{fig:severity_class_distribution} shows the label distribution in the Mozilla dataset, which will be used to train and test the prediction model. As one can observe, the label distribution in the dataset is unbalanced. I'll try some techniques to handle this problem, for instance, class weighting\cite{procrastinator:2021}. 
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/severity-labels-distribution.png}
+    \caption{Caption}
+    \label{fig:severity_class_distribution}
+\end{figure}
 
 \subsection{Evaluation Metrics}
-The specific metrics used in this project for assessing prediction performance will be the {\bf Balanced Accuracy}\cite{Kuhn:2013}. This metric is calculated as the average of the proportion of the accuracy of the positive class and the accuracy of the negative class. The formula of Balanced Accuracy is:
-\begin{equation}
-    Balanced Accuracy = \frac{{\frac{TP}{TP+FN}}+{\frac{TN}{FP+TN}}}{2}
-\end{equation}
+The specific metrics I'll use for assessing prediction performance for evaluating the accuracy of classification algorithms will be precision, recall, and F-measure, described as follows\cite{Kuhn:2013}:
 
-The Balanced Accuracy especially useful when the target classes are imbalanced. This happens often in many settings, such as bug severity prediction.
-\bigskip
+\begin{itemize}
+\item \textbf{Recall}. The recall is the number of True Positives (TP) divided by the number of True Positives (TP) and of False Negatives (FN), where the TP and FN values are derived from the confusion matrix. A low recall indicates many false negatives.
+
+\item \textbf{Precision}. Precision is the number of True Positives (TP) divided by the number of True Positives and False Positives (FP). A low precision can also indicate many false positives.
+
+\item \textbf{F-measure}. F-measure conveys the balance between precision and recall and can be calculated as their harmonic mean. 
+\end{itemize}
+
+The metrics above especially useful when the target classes are imbalanced, which often happens in many settings, such as bug severity prediction. Also, these metrics enable the comparison between my prediction model and benchmark models.
+
+\subsection{Benchmarch model}
+
+
 
 \section{Project Design}
 Figure~\ref{fig:application-architecture} shows the high-level architecture of the bug severity predictor application. The architecture will consist of two modules: front-end and back-end modules. The front-end module will run in a web browser, and it will be in charge of receiving and displaying data from or to the user. The back-end module will run in a server and be responsible for cleaning, breaking into tokens, and weighting each term of the bug description text extracted from a BTS system. Moreover, the back-end module will predict the bug severity level, as requested of the front-end, based on the bug description and the predicting model previously saved. The front-end module will communicate with the back-end throughout the REST protocol. 
