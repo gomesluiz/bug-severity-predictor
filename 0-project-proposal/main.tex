@@ -28,6 +28,7 @@
             sorting=nyt]{biblatex}
 \addbibresource{references.bib}
 \usepackage{csquotes}
+\usepackage{multirow}
 \usepackage[yyyymmdd]{datetime}
 \renewcommand{\dateseparator}{-}
 
@@ -88,7 +89,7 @@ The general purpose of my project is to develop an intelligent ML-based web assi
 \end{enumerate}
 %]
 \subsection{Datasets and Inputs}
-I'll use a dataset with 2395 bug reports, collected from Mozilla project, and available in project GitHub repository\footnote{}, to train and test the predicting model. The Mozilla project encompasses several open-source projects, such as Firefox, Thunderbird, and Bugzilla. Furthermore, it is well-established, has a considerable number of registered bug reports, uses standard repositories, and were being studied in academic research~\cite{Lamkanfi:2010, Lamkanfi:2011, Tian:2012}. Table~\ref{tab:features_descriptions} describes the features of the dataset that will used for bug report severity prediction. Each feature in this table has a description, a category.
+I'll use a dataset with 2395 bug reports, collected from Mozilla project and available in the project GitHub repository\footnote{\url{https://github.com/gomesluiz/bug-severity-predictor/blob/main/data/raw/mozilla_bug_report_data.csv}}, to train and test the predicting model. The Mozilla project encompasses several open-source projects, such as Firefox, Thunderbird, and Bugzilla. Furthermore, it is well-established, has a considerable number of registered bug reports, uses standard repositories, and were being studied in academic research~\cite{Lamkanfi:2010, Lamkanfi:2011, Tian:2012}. Table~\ref{tab:features_descriptions} describes the features of the dataset that will used for bug report severity prediction. Each feature in this table has a description, a category.
 
 \begin{table}[ht!]
     \centering
@@ -108,11 +109,12 @@ I'll use a dataset with 2395 bug reports, collected from Mozilla project, and av
 \end{table}
 
 \bigskip
-Figure~\ref{fig:severity_class_distribution} shows the label distribution in the Mozilla dataset, which will be used to train and test the prediction model. As one can observe, the label distribution in the dataset is unbalanced. I'll try some techniques to handle this problem, for instance, class weighting\cite{procrastinator:2021}. 
+Figure~\ref{fig:severity_class_distribution} shows the label distribution in the Mozilla dataset, which will be used to train and test the prediction model. It will be split into a training set (75\% out of 2395) and into a testing set (25\% out of 2395). As one can observe, the label distribution in the dataset is unbalanced. Therefore, to maintain the proportion of labels in training and testing sets, I will use the stratify splitting and class weighting\cite{procrastinator:2021} to mitigate the unbalancing impact.
+
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/severity-labels-distribution.png}
-    \caption{Caption}
+    \caption{Target label distribution on the Mozilla bug reports dataset.}
     \label{fig:severity_class_distribution}
 \end{figure}
 
@@ -127,11 +129,47 @@ The specific metrics I'll use for assessing prediction performance for evaluatin
 \item \textbf{F-measure}. F-measure conveys the balance between precision and recall and can be calculated as their harmonic mean. 
 \end{itemize}
 
-The metrics above especially useful when the target classes are imbalanced, which often happens in many settings, such as bug severity prediction. Also, these metrics enable the comparison between my prediction model and benchmark models.
+The metrics above especially useful when the target classes are unbalanced, which often happens in many settings, such as bug severity prediction. Also, these metrics enable the comparison between my prediction model and benchmark models.
 
-\subsection{Benchmarch model}
+\subsection{Benchmark model}
 
+The benchmark model that will be used in my project will be based on the literature. Table \ref{tab:performance_of_algorithms}  provides a quantitative view of the performance obtained in the experimental setting, showing the algorithms which presented the best performances in some papers. 
 
+\begin{table}[htp]
+        \scriptsize
+        \centering
+        
+        \begin{tabular}{@{}p{.10\textwidth}p{.10\textwidth}p{.20\textwidth}p{.10\textwidth}ccccc@{}}
+        \toprule
+        \multirow{2}{*}{\thead{Ref.}} & \multirow{2}{*}{\thead{Projects}} & \multirow{2}{*}{\thead{Algorithms}} & \multirow{2}{*}{\thead{Hyper\\parameters}} & \multirow{2}{*}{\thead{Classes}} & \multicolumn{1}{c}{\thead{}} & \thead{Metrics}         & \thead{}          & \multirow{2}{*}{\thead{Terms}} \\ \cmidrule(lr){6-8}
+                                            &                                   &                             &  & & \thead{AUC}                        & \thead{Accuracy} & \thead{F-Measure} &                                           \\ \cmidrule(r){1-5} \cmidrule(r){6-8} \cmidrule(l){9-9} 
+    
+        \cite{Yang:2012}                    &  Mozilla                          &  Multinomial Näive Bayes                        &  & 2 & 0.849                               &                   &                    & 100                                          \\ 
+        \cmidrule{1-9}    
+        \cite{Yang:2014b}                   &  Mozilla                          &  KNN                        & K = 1 & 7 &                                     &  0.750           &                    & 40                                          \\ 
+        \cmidrule{1-9}
+        \cite{Valdivia:2014}                &  Mozilla                          &  Random Forest              &  & 2 &                                     &  0.823            &  0.432             &                                           \\ 
+        \cmidrule{1-9}
+        \cite{Meera:2014}                   &  Mozilla                          &  Näive Bayes                         &  & 6 &                                     &  0.916            &                    &                                           \\ 
+        \cmidrule{1-9}
+        \cite{Roy:2014}                     &  Mozilla                          &  Näive Bayes                         &  & 2 & 0.924                               &  0.880                 &  0.797                & 750                                          \\ 
+        \cmidrule{1-9}
+        \cite{Xia:2015}                     &  Mozilla                          &  Bagging Ensemble           &  & 2 &                                     &                   &  0.482             &                                           \\ 
+        \cmidrule{1-9}
+        \cite{Pushpalathas:2016}            &  Mozilla                          &  Bagging Ensemble           &  & 4 &                                     &  0.812            &                    &                                           \\ 
+        \cmidrule{1-9}
+        \cite{Otoom:2016}                   &  Mozilla                  &  Random Forest              &  & 2 &                                     &  0.764            &                    & 59                                          \\ 
+        \cmidrule{1-9}
+        \cite{Jin:2016a}                    &  Mozilla                               &  Multinomial Näive Bayes                        &  & 2 &                                     &                   &    0.820                &  79,000                                         \\ 
+        \cmidrule{1-9}
+        \cite{Jin:2016b}                    &  Mozilla                          &  Multinomial Näive Bayes                       &  & 2 &                                     &                   &  0.820             &                                           \\ 
+        \cmidrule{1-9}
+        \cite{Jin:2016c}                    &  Mozilla                          &  Multinomial Näive Bayes                        &  & 2 &                                     &     &  0.790             &                                           \\ 
+        \bottomrule
+        \end{tabular}
+        \caption{The best ML algorithms performance of papers in the literature.}
+        \label{tab:performance_of_algorithms}
+    \end{table}
 
 \section{Project Design}
 Figure~\ref{fig:application-architecture} shows the high-level architecture of the bug severity predictor application. The architecture will consist of two modules: front-end and back-end modules. The front-end module will run in a web browser, and it will be in charge of receiving and displaying data from or to the user. The back-end module will run in a server and be responsible for cleaning, breaking into tokens, and weighting each term of the bug description text extracted from a BTS system. Moreover, the back-end module will predict the bug severity level, as requested of the front-end, based on the bug description and the predicting model previously saved. The front-end module will communicate with the back-end throughout the REST protocol. 
@@ -143,7 +181,22 @@ Figure~\ref{fig:application-architecture} shows the high-level architecture of t
 \end{figure}
 
 The predicting model will be train and test using feature extracted using the Pre-training of Deep Bidirectional Transformers for
-Language Understanding (BERT)\cite{devlin:2019}.  
+Language Understanding (BERT)\cite{devlin:2019}. Table~\ref{tab:techology_summary} shows the summary of the main technologies and libraries that will be used in the current project.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+    \toprule
+    {\bf Module/Funcionality} & {\bf Technology/Library}                         \\ \midrule
+    Front-end/User Interaction           & HTML, CSS, Javascript/Bootstrap           \\
+    Back-end/Microservices            & Python/Flask                              \\
+    Back-end/Predicting and Modeling & Python/Scikit-learn, Tensorflow, and Bert \\
+    Back-end/Text mining         & Python/NLTK                               \\
+    Back-end/Web scrapping       & Python/Scrapy                             \\ \bottomrule
+    \end{tabular}
+    \caption{Summary of technologies and libraries that will be used in the current project.}
+    \label{tab:techology_summary}
+\end{table}
 
 \printbibliography
 
