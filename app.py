@@ -1,13 +1,16 @@
+import io
 import os
+import xml.etree.ElementTree as ET
 
-import joblib
 import numpy as np
+import requests
 import torch
 import transformers as ppb
+import xgboost as xgb
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import FloatField, SubmitField
+from wtforms import StringField
 from wtforms.validators import DataRequired
 
 app = Flask(__name__)
@@ -15,7 +18,7 @@ app.config['SECRET_KEY'] = 'wP4xQ8hU1jJ5oI1c'
 bootstrap = Bootstrap(app)
 
 class InputForm(FlaskForm):
-    bug_id = FloatField('Bug Id:', validators=[DataRequired()])
+    bug_id = StringField('Bug Id:', validators=[DataRequired()])
 
 # 
 model_class, tokenizer_class, pretrained_weights = (ppb.DistilBertModel, 
@@ -27,20 +30,40 @@ model     = model_class.from_pretrained(pretrained_weights)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form     = InputForm(request.form)
-    severity = 'No-image'
+    severity    = ''
+    description = ''
     if form.validate_on_submit():
-        id = [[form.bug_id.data]]
-        description = "Email reminders are added by default to new events - great feature.  However, editing an event in Lightning will remove this email reminder.  I have been unable to find a way to add the reminder back after it's been lost."
+        description = read_bug_description(form.bug_id.data) 
+        # TODO: clean description
         X = extract_features(description)
         severity = make_prediction(X) 
-        print(severity)
 
-    return render_template('index.html', form=form, severity=severity)
+    return render_template('index.html', form=form, description=description, severity=str(severity))
+
+def read_bug_description(id):
+    url = f"https://bugzilla.mozilla.org/show_bug.cgi?ctype=xml&id={id}"
+    print(url)
+    r = requests.get(url)
+    if r.status_code == 404:
+        return 'bug report not found!'
+
+    f = io.StringIO(r.text)
+    tree = ET.parse(f)
+    root = tree.getroot()
+    description = root.findall('./bug/long_desc/thetext')
+    if description is None:
+        return 'bug report without description'
+
+    return description[0].text
 
 def make_prediction(X):
-    filename = os.path.join('data', 'model', 'final-model.joblib')
-    model = joblib.load(filename)
-    return model.predict(X)[0]
+    filename = os.path.join('data', 'model', 'final-model.bin')
+    #dt = xgb.DMatrix(X)
+    clf = xgb.XGBClassifier()
+    bst = xgb.Booster({'nthread':4})
+    bst.load_model(filename)
+    clf._Booster = bst
+    return clf.predict(X)[0]
 
 def extract_features(description):
     max_len=64
