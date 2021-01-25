@@ -1,35 +1,34 @@
+# Standard packages.
 import io
 import os
 import xml.etree.ElementTree as ET
 
+# Third-party packages.
 import numpy as np
 import requests
 import torch
 import transformers as ppb
 import xgboost as xgb
+
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
 
+# Setup application.
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'wP4xQ8hU1jJ5oI1c'
 bootstrap = Bootstrap(app)
 
+# Define custom form.
 class InputForm(FlaskForm):
     bug_id = StringField('Bug Id:', validators=[DataRequired()])
 
-# 
-model_class, tokenizer_class, pretrained_weights = (ppb.DistilBertModel, 
-    ppb.DistilBertTokenizer, 
-    'distilbert-base-uncased')
-tokenizer = tokenizer_class.from_pretrained(pretrained_weights)
-model     = model_class.from_pretrained(pretrained_weights)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    form     = InputForm(request.form)
+    form        = InputForm(request.form)
     severity    = ''
     description = ''
     if form.validate_on_submit():
@@ -54,6 +53,7 @@ def read_bug_description(id):
     if description is None:
         return 'bug report without description'
 
+
     return description[0].text
 
 def make_prediction(X):
@@ -66,7 +66,13 @@ def make_prediction(X):
     return clf.predict(X)[0]
 
 def extract_features(description):
-    max_len=64
+    max_len=128
+    # Create DistilBERT model and tokenizer 
+    model_class, tokenizer_class, pretrained_weights = (ppb.DistilBertModel, 
+        ppb.DistilBertTokenizer, 
+        'distilbert-base-uncased')
+    tokenizer = tokenizer_class.from_pretrained(pretrained_weights)
+    model     = model_class.from_pretrained(pretrained_weights)
     sentence = ' '.join(description.split()[:max_len])
     tokenized = tokenizer.encode(sentence, add_special_tokens=True) 
     
