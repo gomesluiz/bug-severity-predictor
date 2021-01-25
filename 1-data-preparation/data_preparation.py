@@ -20,7 +20,7 @@ def clean_data_fn(text):
     return text
 
 def load_data_fn(file_path):
-    """Read a bug report data set.
+    """Read and clean a bug report data set.
 
     Args:
         filepath (str): a complete filename path.
