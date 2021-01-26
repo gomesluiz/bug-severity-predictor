@@ -8,7 +8,7 @@ In this project, I'll build a severity predictor for the [Mozilla project](https
 
 The severity in the Mozilla project indicates how severe the problem is – from blocker ("application unusable") to trivial ("minor cosmetic issue"). Also, this field can be used to indicate whether a bug is an enhancement request. In my project, I have considered five severity levels: **trivial**, **minor**, **major**, **critical**, and **blocker**. I have ignored the default severity level (often **"normal"**) because this level is considered as a choice made by users when they are not sure about the correct severity level. 
 
-This project will be broken down into three main notebooks:
+This project will be broken down into four main notebooks:
 
 **Notebook 1: Data Preparation**
 * Download the necessary data from [Mendeley Data] (https://data.mendeley.com/datasets/v446tfssgj/2) and extract the files into the folder **data/raw**.
