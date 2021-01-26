@@ -48,7 +48,7 @@ pip install -Uqr requirements.txt
 export FLASK_APP=app.py 
 flask run
 ```
-To predict a bug severity level, access the [local address](http://127.0.0.1:5000) in a web browser and type a bug id from [Mozilla Bug Tracking System](https://bugzilla.mozilla.org/home).
+To predict a bug severity level, access the [local address](http://127.0.0.1:5000) in a web browser and type a **bug id** from [Mozilla Bug Tracking System](https://bugzilla.mozilla.org/home).
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
