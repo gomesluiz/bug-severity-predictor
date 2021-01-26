@@ -11,27 +11,48 @@ The severity in the Mozilla project indicates how severe the problem is – from
 This project will be broken down into three main notebooks:
 
 **Notebook 1: Data Preparation**
-* Load bug reports data from a single CSV file stored at [Mendey Data](https://data.mendeley.com/datasets/v446tfssgj/2).
-* Download the necessary data from [Mendeley Data (https://data.mendeley.com/datasets/v446tfssgj/2) and extract the files into the folder **data/raw**.
-* Explore basicaly the existing data features and the data distribution.
-* Clean and convert data to suitable format for next steps in workflow machine learning.
-* Notebook file path [Here].(1-data-preparation/prepare-data.ipynb)
+* Download the necessary data from [Mendeley Data] (https://data.mendeley.com/datasets/v446tfssgj/2) and extract the files into the folder **data/raw**.
+* Explore the existing data features and the data distribution.
+* Clean and pre-process the bug reports data for next steps in machine learning workflow.
+* Export cleaned data into the folder **data/cleaned**
+* Notebook file path [Here](./1-data-preparation/prepare-data.ipynb).
 
-**Notebook 2: Feature Engineering**
+**Notebook 2: Data Analysis**
+* Analyze the dataset to summarize their main characteristics using visual methods.
+* Explore the class distributions and word distributions by bug severity levels. 
+* Notebook file path [Here](./2-data-analysis/exploratory-data-analysis.ipynb).
 
-* Clean and pre-process the text data.
-* Define features for comparing the similarity of an answer text and a source text, and extract similarity features.
-* Select "good" features, by analyzing the correlations between different features.
-* Create train/test `.csv` files that hold the relevant features and class labels for train/test data points.
+**Notebook 3: Feature Engineering**
+* Extract features in tensor data format from cleaned data via [DistilBERT](https://medium.com/huggingface/distilbert-8cf3380435b5) deep learning network. 
+* Export train/test `.pt` files that hold the relevant features and class labels for train/test data points into the folder **data/processed**.
+* Notebook file path [Here](./3-feature-engineering/extract-features.ipynb).
 
-**Notebook 3: Train and Deploy Your Model in SageMaker**
+**Notebook 4: Predictive Modeling**
+* Define a multilabel classification model and a training script.
+* Train the model using [XGBoost](https://xgboost.readthedocs.io/en/latest/) and [Hyperopt](https://towardsdatascience.com/automated-machine-learning-hyperparameter-tuning-in-python-dfda59b72f8a).
+* Evaluate and save the trained model into **data/model**.
+* Notebook file path [Here](./4-predictive-modeling/built-and-save-model.ipynb).
 
-* Upload your train/test feature data to S3.
-* Define a binary classification model and a training script.
-* Train your model and deploy it using SageMaker.
-* Evaluate your deployed classifier.
+## Installation
 
----
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the requirements packages
+describe in requirements.txt in the project root.
 
-Please see the [README](https://github.com/udacity/ML_SageMaker_Studies/tree/master/README.md) in the root directory for instructions on setting up a SageMaker notebook and downloading the project files (as well as the other notebooks).
+```bash
+pip install -Uqr requirements.txt
+```
 
+## Usage
+
+```bash
+export FLASK_APP=app.py 
+flask run
+```
+To predict a bug severity level, access the [local address](http://127.0.0.1:5000) in a web browser and type a bug id from [Mozilla Bug Tracking System](https://bugzilla.mozilla.org/home).
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
