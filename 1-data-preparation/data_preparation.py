@@ -57,3 +57,19 @@ def convert_to_ordinal_fn(severity):
                 'critical': 3,
                 'blocker': 4}
     return categories.get(severity, 'Invalid severity category!')
+
+def convert_to_categorical_fn(code):
+    """Convert severity ordinal to category.
+
+    Args:
+        code (int): a severity ordinal.
+
+    Returns:
+        severity (string): categorical value of severity.
+    """
+    ordinals={0:'trivial',
+              1:'minor',
+              2:'major',
+              3:'critical',
+              4:'blocker'}
+    return ordinals.get(code, 'Invalid severity ordinal!')
