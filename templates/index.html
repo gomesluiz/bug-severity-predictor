@@ -25,7 +25,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             {%if description %}
-                                <span><strong>Description:</strong></span>
+                                <span><strong>Description:</strong></span><br/>
                                 <span>{{description}}</span>
                             {% endif %}
                         </div>
@@ -34,9 +34,19 @@
                 <div class="col-md-4">
                     <img src="{{ url_for('static', filename=severity + '.svg') }}" class="w-30 h-30 img-thumbnail" >
                     {% if severity != 'No-image' %}
-                        <figcaption class="figure-caption text-right">Severity level: <strong>{{severity.capitalize()}}</strong></figcaption>
+                        <hr/>
+                        <figcaption class="figure-caption text-right">Severity level: <span class="badge badge-primary">{{severity.capitalize()}}</span></figcaption>
                     {% endif %}
                 </div>
+            </div>
+            <hr />
+            <div class="row">
+                {% for message in get_flashed_messages() %}
+                    <div class="alert alert-danger">
+                        <button type="button" class="close" data-dimiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
             </div>
         </form>
     </div>

@@ -27,8 +27,8 @@ app.config['SECRET_KEY'] = 'wP4xQ8hU1jJ5oI1c'
 bootstrap = Bootstrap(app)
 
 # Custom error messages.
-BUG_NOT_FOUND = "Bug Report Not Found!"
-BUG_DESCRIPTION_NOT_FOUND = "Bug Report Description Not Found!"
+BUG_NOT_FOUND = "Bug report not found!"
+BUG_DESCRIPTION_NOT_FOUND = "Bug report description not found!"
 
 # Define custom form.
 class InputForm(FlaskForm):
@@ -53,7 +53,9 @@ def index():
             X = extract_features(clean_data_fn(description))
             severity = convert_to_categorical_fn(make_prediction(X)) 
         else:
+            severity    = 'undefined'
             flash(description)
+            description = ''
 
     return render_template('index.html', form=form, description=description, severity=str(severity))
 
@@ -71,15 +73,15 @@ def get_description(id):
     url = f"https://bugzilla.mozilla.org/show_bug.cgi?ctype=xml&id={id}"
 
     response = requests.get(url)
-    if response.status_code == 404:
-        return "Bug Report Not Found!" 
+    if "InvalidBugId" in response.text:
+        return BUG_NOT_FOUND 
 
     file = io.StringIO(response.text)
     tree = ET.parse(file)
     root = tree.getroot()
     description = root.findall('./bug/long_desc/thetext')
     if description is None:
-        return None
+        return BUG_DESCRIPTION_NOT_FOUND
 
     return description[0].text
 

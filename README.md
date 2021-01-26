@@ -33,6 +33,23 @@ This project will be broken down into four main notebooks:
 * Evaluate and save the trained model into **data/model**.
 * Notebook file path [Here](./4-predictive-modeling/built-and-save-model.ipynb).
 
+## Packages 
+The table below shows the main required third-party Python packages to run 
+codes and notebooks of this project.
+
+* flask
+* flask-wtf
+* flask-boostrap
+* gnunicorn
+* matplotlib
+* numpy
+* pandas
+* scikit-learn
+* seaborn
+* torch 
+* transformers 
+* xbgboost
+
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the requirements packages
