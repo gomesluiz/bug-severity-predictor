@@ -6,6 +6,7 @@
 5-project-report/*
 data/raw/*
 data/clean/*
+data/cleaned/*
 data/processed/*
 jupyter.sh
 __pycache__
