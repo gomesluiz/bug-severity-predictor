@@ -12,8 +12,10 @@ This project will be broken down into three main notebooks:
 
 **Notebook 1: Data Preparation**
 * Load bug reports data from a single CSV file stored at [Mendey Data](https://data.mendeley.com/datasets/v446tfssgj/2).
-* Explore the existing data features and the data distribution.
-* Notebook file path: [prepare-data.ipynb](1-data-preparation/prepare-data.ipynb)
+* Download the necessary data from [Mendeley Data (https://data.mendeley.com/datasets/v446tfssgj/2) and extract the files into the folder **data/raw**.
+* Explore basicaly the existing data features and the data distribution.
+* Clean and convert data to suitable format for next steps in workflow machine learning.
+* Notebook file path [Here].(1-data-preparation/prepare-data.ipynb)
 
 **Notebook 2: Feature Engineering**
 
